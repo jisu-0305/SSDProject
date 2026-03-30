@@ -1,0 +1,46 @@
+# C++ / C / Objective-C
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+
+# IDEs/Editors (Visual Studio, CLion, VSCode)
+.vs/
+.vscode/
+.idea/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.user
+cmake-build-*/
+build/
+build/Debug/
+build/Release/
+
+# Build directories
+Debug/
+Release/
+x64/
+x86/
+bin/
+obj/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+install_manifest.txt
