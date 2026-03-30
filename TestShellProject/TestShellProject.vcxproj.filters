@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\commands">
+      <UniqueIdentifier>{9c5b7d49-5fd2-4e3d-af2c-24516f4eb10f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\client">
+      <UniqueIdentifier>{dd8b1400-bf95-4804-b42b-d62f60e99f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\commands">
+      <UniqueIdentifier>{1ac5fa32-56be-41a1-b75c-c3ad77afb53b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\client">
+      <UniqueIdentifier>{1536199a-a084-481f-bf56-d07abb9a234c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestShell.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientHandler.h">
+      <Filter>헤더 파일\client</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Errcodes.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadCommand.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="TestCommand.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="FullReadCommand.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="FullWriteCommand.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpCommand.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAllCommand.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+    <ClInclude Include="WriteCommand.h">
+      <Filter>헤더 파일\commands</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TestShell.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadCommand.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCommand.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientHandler.cpp">
+      <Filter>소스 파일\client</Filter>
+    </ClCompile>
+    <ClCompile Include="FullReadCommand.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Errcodes.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="FullWriteCommand.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAllCommand.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="HelpCommand.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+    <ClCompile Include="WriteCommand.cpp">
+      <Filter>소스 파일\commands</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TestShellProject.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
