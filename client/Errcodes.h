@@ -5,8 +5,10 @@ class Errcodes
 private:
 	int no;
 	std::string lore;
+	Errcodes() {};
 public:
-	std::string getErrorMsg();
-	
+	static Errcodes& get();
+	std::string& getErrorMsg();
+	void makeError(int errn);
 };
 
