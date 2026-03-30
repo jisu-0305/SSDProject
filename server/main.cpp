@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
@@ -38,6 +38,9 @@ int main() {
 		//Read먼저
 
 		string input;
+
+
+		//write 수행
 
 
 
