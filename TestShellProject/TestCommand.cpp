@@ -1,25 +1,22 @@
 #include "TestCommand.h"
 
+void TestCommand::operator()() {
+    /**
+    * 
+    */
+    //int res = 
+    
+}
 
-void TestCommand::init() {
+TestCommand::TestCommand() {
+    init();
+}
+void TestCommand::init() { //상수 설정 (ex cmd length)
 
 }
-int TestCommand::prepare()
+int TestCommand::prepare(std::vector<std::string>& args, Errcodes& handler)
 {
-    cmds.clear();
-    //splice
-
-    std::string in;
-    std::string temp;
-    std::getline(std::cin, in);
-    std::stringstream ss(in);
-    while (std::getline(ss, temp, ' ')) {
-        cmds.push_back(temp);
-    }
-    int valres = validate();
-    if (!valres) return valres;
-    int runres = run();
-    return runres;
+    cmds = std::move(args);
 }
 
 
@@ -36,7 +33,7 @@ int TestCommand::validate()
     for (auto& s : cmds) {
         std::cout << s << " " << std::endl;
     }
-    if (cmds.size() > len - 1) return -1;
+    if (cmds.size() > len) return -1;
     std::string& s = cmds[0];
 
     if (!std::isdigit(s[0])) return -1;

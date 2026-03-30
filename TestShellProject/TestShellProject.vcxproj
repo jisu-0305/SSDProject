@@ -24,6 +24,7 @@
     <ProjectGuid>{5c20470d-3523-47fd-8db3-802cade222de}</ProjectGuid>
     <RootNamespace>TestShellProject</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>client</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -137,6 +138,7 @@
     <ClInclude Include="FullWriteCommand.h" />
     <ClInclude Include="HelpCommand.h" />
     <ClInclude Include="ReadCommand.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="TestAllCommand.h" />
     <ClInclude Include="TestCommand.h" />
     <ClInclude Include="TestShell.h" />
@@ -154,9 +156,6 @@
     <ClCompile Include="TestCommand.cpp" />
     <ClCompile Include="TestShell.cpp" />
     <ClCompile Include="WriteCommand.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="TestShellProject.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

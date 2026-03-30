@@ -12,19 +12,32 @@ void TestShell::init() { //open server connection
 }
 void TestShell::run() {
     std::string in;
+    std::string temp;
+
     Errcodes errhandler;
+    std::vector<std::string> args;
+
     while (1) {
+        //args.clear();
+        temp = "";
         std::cout << "shell>";
-        std::cin >> in;
+        std::getline(std::cin, in);
 
-        if (in == "exit") break;
+        std::stringstream ss(in);
+        while (std::getline(ss, temp, ' ')) {
+            args.push_back(temp);
+        }
+        if (args[0] == "exit") break;
 
-        if (!commands.count(in)) { //wrong input
-
+        if (!commands.count(args[0])) { //wrong input
             continue;
         }
         
-        commands[in]();
+        
+        auto& cmd = commands[in];
+        cmd->prepare(args, errhandler);
+        cmd->validate();
+        cmd->run();
         //int err = commands[in]->;
         //handle errcode? or do it in commands class.
     }

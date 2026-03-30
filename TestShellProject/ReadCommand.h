@@ -1,5 +1,17 @@
 #pragma once
-class ReadCommand
+#include "Command.h"
+class ReadCommand : public Command
 {
+private:
+	const int len = 2;
+	std::vector<std::string> cmds;
+
+public:
+	TestCommand();
+	void operator() () override;
+	int prepare(std::vector<std::string>& args, Errcodes& handler) override;
+	void init() override;
+	int run() override;
+	int validate() override;
 };
 
