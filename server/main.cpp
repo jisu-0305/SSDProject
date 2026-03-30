@@ -29,7 +29,7 @@ void init()
 	cout << "nand.txt 생성 완료" << "\n";
 }
 
-string read(const int LBA, ifstream& txtFile) 
+string read(const int LBA, ifstream& txtFile)
 {
 	string line;
 	int currentLine = 0;
@@ -42,13 +42,13 @@ string read(const int LBA, ifstream& txtFile)
 			}
 			currentLine++;
 		}
-	} 
-	return "ERROR"; 
+	}
+	return "ERROR";
 }
 
 void write(const vector<std::string>& data) {
 	std::ofstream fout(filename);
-	
+
 	for (auto v : data) {
 		fout << v << "\n";
 	}
@@ -62,37 +62,37 @@ vector<string> fullRead() {
 		getline(fin, data[i]);
 	}
 	return data;
-} 
+}
 
 // LBA변환 (0 -> 3)
 int transformInt(string& s) {
 	int LBAInt = stoi(s); // try~catch 여부 궁금
 
-	if (0 <= LBAInt && LBAInt < 100) { 
+	if (0 <= LBAInt && LBAInt < 100) {
 		return LBAInt;
 	}
 	else {
 		return -1;
-	} 
-} 
+	}
+}
 
 // 0~F까지 범위 + 4byte 값인지 검증하는 메서드 필요
-bool isValidValue(const string& s) { 
-	if (s.size() != 10) return false; 
-	if (s.substr(0, 2) != "0x") return false; 
-	for (int i = 2; i < 10; i++) { 
-		char c = s[i]; 
+bool isValidValue(const string& s) {
+	if (s.size() != 10) return false;
+	if (s.substr(0, 2) != "0x") return false;
+	for (int i = 2; i < 10; i++) {
+		char c = s[i];
 		//0~9와 F까지의 문자만 가능(48~57 또는 65~70만 가능) 
-		if (((48 <= c && c <= 57)) || ((65 <= c)&&(c <= 70))) {  
+		if (((48 <= c && c <= 57)) || ((65 <= c) && (c <= 70))) {
 			cout << c << "일때 문제 없음" << endl;
-			continue; 
+			continue;
 		}
-		else { 
-			cout << "value값 오류!" << endl; 
+		else {
+			cout << "value값 오류!" << endl;
 			return false;
 		}
-	} 
-	return true; 
+	}
+	return true;
 }
 
 int main() {
@@ -113,75 +113,55 @@ int main() {
 				char input_data[1024];
 				boost::system::error_code ec;
 
-				size_t length = socket.read_some(boost::asio::buffer(data), ec);
 
-				if (ec == boost::asio::error::eof)
-					break; // 정상 종료
-				else if (ec)
-					throw boost::system::system_error(ec);
+				size_t length = socket.read_some(boost::asio::buffer(input_data), ec);
 
-				string cmd(buf, length);
+				if (ec == boost::asio::error::eof) break;
+				else if (ec) throw boost::system::system_error(ec);
 
-				//예시 더미 데이터
-				//string exampleInput = "read 3"; 
-				//string exampleInput = "read 03";
-				//string exampleInput = "read 04";
-				string exampleInput = "write 3 0xFFFFFFFF";
 
-				// client 입력 받기
-				stringstream ss(exampleInput);
-				string command;
-				string LBA;
-				ss >> command >> LBA;
+				string cmd_str(input_data, length);
+				stringstream ss(cmd_str);
 
-				//LBA 검증
+				string command, LBA;
+				if (!(ss >> command >> LBA)) continue;
+
 				int LBAInt = transformInt(LBA);
-				if (LBAInt == -1) boost::asio::write(socket, boost::asio::buffer("ERROR"));//////////WRITE
+				if (LBAInt == -1) {
+					boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid LBA\n"));
+					continue;
+				}
 
 				ifstream readfile("nand.txt");
-
-				//파일이 존재하는지 아닌지 확인
 				if (readfile.is_open()) {
-					cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
+
+					cout << "Executing command: " << command << " for LBA " << LBAInt << endl;
 
 					if (command == "read") {
 						string line = read(LBAInt, readfile);
-						cout << "read로 찾은 value값: " << line << endl;
-						boost::asio::write(socket, boost::asio::buffer("0x" + line + "\n"));///////////////////write
+						boost::asio::write(socket, boost::asio::buffer(line + "\n"));
 					}
 					else if (command == "write") {
 						string value;
 						ss >> value;
-						if (!isValidValue(value))boost::asio::write(socket, boost::asio::buffer("ERROR"+"\n"));
-
-						fstream fs(filename, ios::in | ios::out | ios::binary);
-						if (fs.is_open()) {
-							auto data = fullRead();
-							data[LBAInt] = value;
-							write(data);
-							string line = read(LBAInt, readfile);
-							cout << "write로 찾은 value값: " << line << endl;
-
-							boost::asio::write(socket, boost::asio::buffer("SUCCESS" + "\n"));   //////////////WRITE
+						if (!isValidValue(value)) {
+							boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid Value\n"));
+							continue;
 						}
 
-						else {
-							cout << "[ERROR]: Value 값 오류";
-							boost::asio::write(socket, boost::asio::buffer("ERROR" + "\n"));
-						}
-					}
-					else {
-						//에러값 반환 필요
-					}
+						auto data = fullRead();
+						data[LBAInt] = value;
+						write(data);
 
-
+						boost::asio::write(socket, boost::asio::buffer("SUCCESS\n"));
+					}
 				}
 				else {
-					cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
 					init();
 				}
-			
 			}
+
+
 			std::cout << "Client disconnected\n";
 		}
 	}
@@ -189,5 +169,4 @@ int main() {
 		std::cerr << e.what() << std::endl;
 	}
 }
-
 
