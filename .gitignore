@@ -16,7 +16,6 @@
 .vscode/
 .idea/
 *.sln
-*.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
 *.suo
