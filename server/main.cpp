@@ -8,23 +8,21 @@
 using boost::asio::ip::tcp;
 using namespace std;
 
-string filename = "nand.txt";
-const int totalLBA = 100;
+const string FILE_NAME = "nand.txt";
+const int TOTAL_LBA = 100;
 
 void init()
 {
 	ofstream newwrite;
-	newwrite.open("nand.txt");
+	newwrite.open(FILE_NAME);
 
 	for (int i = 0; i < 100; i++) {
-		string temp = "00000000"; //이거 수정해야함
+		string temp = "00000000"; 
 		if (i != 99) {
 			temp += "\n";
 		}
 
 		newwrite.write(temp.c_str(), temp.size());
-
-
 	}
 	cout << "nand.txt 생성 완료" << "\n";
 }
@@ -38,40 +36,57 @@ string read(const int LBA, ifstream& txtFile)
 		while (getline(txtFile, line)) {
 			if (currentLine == LBA) {
 				txtFile.close();
-				return line;
+				string hexValue = "0x" + line; 
+				return hexValue; 
 			}
 			currentLine++;
 		}
 	} 
-	return "ERROR"; 
-}
-
-void write(const vector<std::string>& data) {
-	std::ofstream fout(filename);
-	
-	for (auto v : data) {
-		fout << v << "\n";
-	}
+	return "-1"; 
 }
 
 vector<string> fullRead() {
-	vector<string> data(totalLBA, "00000000");
-	ifstream fin(filename);
+	vector<string> data(TOTAL_LBA, "00000000");
+	ifstream fin(FILE_NAME);
 
-	for (int i = 0; i < totalLBA; i++) {
+	for (int i = 0; i < TOTAL_LBA; i++) {
 		getline(fin, data[i]);
 	}
-	return data;
+	return data; 
 } 
+
+int write(const string& value, const int LBAInt, fstream& txtFile) {
+	if (txtFile.is_open()) { 
+		auto data = fullRead();
+		string dataValue = value.substr(2, 8);
+		data[LBAInt] = dataValue;
+		ofstream fout(FILE_NAME);
+		
+		for (auto v : data) {
+			fout << v << "\n";
+		}
+		cout << "write 값 변환 완료";
+		return 1;
+	}
+	else {
+		return -1; // txt파일 없는 경우 - 빼도 될듯한 내용
+	}
+ }
 
 // LBA변환 (0 -> 3)
 int transformInt(string& s) {
-	int LBAInt = stoi(s); // try~catch 여부 궁금
-
-	if (0 <= LBAInt && LBAInt < 100) { 
-		return LBAInt;
+	if (s.size() > 2) return -1; 
+	try{
+		int LBAInt = stoi(s); 
+		if (0 <= LBAInt && LBAInt < 100) {
+			return LBAInt;
+		}
+		else {
+			return -1;
+		}
 	}
-	else {
+	catch (const std::invalid_argument& e) {
+		cout << "정수값이 아닌 값 발견" << endl;
 		return -1;
 	} 
 } 
@@ -84,7 +99,6 @@ bool isValidValue(const string& s) {
 		char c = s[i]; 
 		//0~9와 F까지의 문자만 가능(48~57 또는 65~70만 가능) 
 		if (((48 <= c && c <= 57)) || ((65 <= c)&&(c <= 70))) {  
-			cout << c << "일때 문제 없음" << endl;
 			continue; 
 		}
 		else { 
@@ -96,98 +110,138 @@ bool isValidValue(const string& s) {
 }
 
 int main() {
-	try {
-		boost::asio::io_context io;
 
-		tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 12345));
+	//try {
+	//	boost::asio::io_context io;
 
-		std::cout << "Server started on port 12345\n";
+	//	tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 12345));
 
-		while (true) {
-			tcp::socket socket(io);
-			acceptor.accept(socket);
+	//	std::cout << "Server started on port 12345\n";
 
-			std::cout << "Client connected\n";
+	//	while (true) {
+	//		tcp::socket socket(io);
+	//		acceptor.accept(socket);
 
-			while (true) {
-				char input_data[1024];
-				boost::system::error_code ec;
+	//		std::cout << "Client connected\n";
 
-				size_t length = socket.read_some(boost::asio::buffer(data), ec);
+	//		while (true) {
+	//			char input_data[1024];
+	//			boost::system::error_code ec;
 
-				if (ec == boost::asio::error::eof)
-					break; // 정상 종료
-				else if (ec)
-					throw boost::system::system_error(ec);
+	//			size_t length = socket.read_some(boost::asio::buffer(data), ec);
 
-				string cmd(buf, length);
+	//			if (ec == boost::asio::error::eof)
+	//				break; // 정상 종료
+	//			else if (ec)
+	//				throw boost::system::system_error(ec);
 
-				//예시 더미 데이터
-				//string exampleInput = "read 3"; 
-				//string exampleInput = "read 03";
-				//string exampleInput = "read 04";
-				string exampleInput = "write 3 0xFFFFFFFF";
+	//			string cmd(buf, length);
 
-				// client 입력 받기
-				stringstream ss(exampleInput);
-				string command;
-				string LBA;
-				ss >> command >> LBA;
+	//			//예시 더미 데이터
+	//			//string exampleInput = "read 3"; 
+	//			//string exampleInput = "read 03";
+	//			//string exampleInput = "read 04";
+	//			string exampleInput = "write 3 0xFFFFFFFF";
 
-				//LBA 검증
-				int LBAInt = transformInt(LBA);
-				if (LBAInt == -1) boost::asio::write(socket, boost::asio::buffer("ERROR"));//////////WRITE
+	//			// client 입력 받기
+	//			stringstream ss(exampleInput);
+	//			string command;
+	//			string LBA;
+	//			ss >> command >> LBA;
 
-				ifstream readfile("nand.txt");
+	//			//LBA 검증
+	//			int LBAInt = transformInt(LBA);
+	//			if (LBAInt == -1) boost::asio::write(socket, boost::asio::buffer("ERROR"));//////////WRITE
 
-				//파일이 존재하는지 아닌지 확인
-				if (readfile.is_open()) {
-					cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
+	//			ifstream readfile("nand.txt");
 
-					if (command == "read") {
-						string line = read(LBAInt, readfile);
-						cout << "read로 찾은 value값: " << line << endl;
-						boost::asio::write(socket, boost::asio::buffer("0x" + line + "\n"));///////////////////write
-					}
-					else if (command == "write") {
-						string value;
-						ss >> value;
-						if (!isValidValue(value))boost::asio::write(socket, boost::asio::buffer("ERROR"+"\n"));
+	//			//파일이 존재하는지 아닌지 확인
+	//			if (readfile.is_open()) {
+	//				cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
 
-						fstream fs(filename, ios::in | ios::out | ios::binary);
-						if (fs.is_open()) {
-							auto data = fullRead();
-							data[LBAInt] = value;
-							write(data);
-							string line = read(LBAInt, readfile);
-							cout << "write로 찾은 value값: " << line << endl;
+	//				if (command == "read") {
+	//					string line = read(LBAInt, readfile);
+	//					cout << "read로 찾은 value값: " << line << endl;
+	//					boost::asio::write(socket, boost::asio::buffer("0x" + line + "\n"));///////////////////write
+	//				}
+	//				else if (command == "write") {
+	//					string value;
+	//					ss >> value;
+	//					if (!isValidValue(value))boost::asio::write(socket, boost::asio::buffer("ERROR"+"\n"));
 
-							boost::asio::write(socket, boost::asio::buffer("SUCCESS" + "\n"));   //////////////WRITE
-						}
+	//					fstream fs(filename, ios::in | ios::out | ios::binary);
+	//					if (fs.is_open()) {
+	//						auto data = fullRead();
+	//						data[LBAInt] = value;
+	//						write(data);
+	//						string line = read(LBAInt, readfile);
+	//						cout << "write로 찾은 value값: " << line << endl;
 
-						else {
-							cout << "[ERROR]: Value 값 오류";
-							boost::asio::write(socket, boost::asio::buffer("ERROR" + "\n"));
-						}
-					}
-					else {
-						//에러값 반환 필요
-					}
+	//						boost::asio::write(socket, boost::asio::buffer("SUCCESS" + "\n"));   //////////////WRITE
+	//					}
+
+	//					else {
+	//						cout << "[ERROR]: Value 값 오류";
+	//						boost::asio::write(socket, boost::asio::buffer("ERROR" + "\n"));
+	//					}
+	//				}
+	//				else {
+	//					//에러값 반환 필요
+	//				}
 
 
-				}
-				else {
-					cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
-					init();
-				}
-			
-			}
-			std::cout << "Client disconnected\n";
-		}
+	//			}
+	//			else {
+	//				cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
+	//				init();
+	//			}
+	//		
+	//		}
+	//		std::cout << "Client disconnected\n";
+	//	}
+	//}
+	//catch (std::exception& e) {
+	//	std::cerr << e.what() << std::endl;
+	
+	//예시 더미 데이터
+	//string exampleInput = "read 3";
+	//string exampleInput = "read 03";
+	//string exampleInput = "read 03a"; 
+	string exampleInput = "write 3 0xFFFFFFFF"; 
+	
+	// client 입력 받기
+	stringstream ss(exampleInput);
+	string command;
+	string LBA; 
+	ss >> command >> LBA; 
+	
+	//LBA 검증
+	int LBAInt = transformInt(LBA);
+	if (LBAInt == -1) return -1; 
+
+	ifstream findfile(FILE_NAME);
+	
+	if (findfile.is_open()) cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
+	else {
+		cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
+		init();
 	}
-	catch (std::exception& e) {
-		std::cerr << e.what() << std::endl;
+
+	if (command == "read") {
+		ifstream readfile(FILE_NAME);
+		string line = read(LBAInt, readfile);
+		cout << "read로 찾은 value값: " << line << endl;
+		if (line == "- 1") return false;  
+	}
+	else if (command == "write") {
+		string value; 
+		ss >> value;
+		if(!isValidValue(value)) return -1;
+
+		fstream fs(FILE_NAME, ios::in | ios::out | ios::binary); 
+		return write(value, LBAInt, fs);
+	}
+	else { 
+		return -1; 
 	}
 }
-
-
