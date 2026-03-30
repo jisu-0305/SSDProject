@@ -3,12 +3,13 @@
 class TestCommand : public Command
 {
 private:
-	std::unique_ptr<TestCommand> value;
-	const int len =2;
+	const int len = 2;
 	std::vector<std::string> cmds;
-	TestCommand() {};
+	
 public:
-	int prepare() override;
+	TestCommand();
+	void operator() () override;
+	int prepare(std::vector<std::string>& args, Errcodes &handler) override;
 	void init() override;
 	int run() override;
 	int validate() override;
