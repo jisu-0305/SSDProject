@@ -7,9 +7,9 @@ private:
 	std::vector<std::string> cmds;
 
 public:
-	FullWriteCommand();
-	void operator() () override;
-	int prepare(std::vector<std::string>& args, Errcodes& handler) override;
+	FullWriteCommand() {};
+	int operator() () override;
+	int prepare(std::vector<std::string>& args) override;
 	void init() override;
 	int run() override;
 	int validate() override;

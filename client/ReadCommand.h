@@ -3,13 +3,12 @@
 class ReadCommand : public Command
 {
 private:
-	const int len = 2;
+	int no;
 	std::vector<std::string> cmds;
-
 public:
-	ReadCommand();
-	void operator() () override;
-	int prepare(std::vector<std::string>& args, Errcodes& handler) override;
+	ReadCommand() {};
+	int operator() () override;
+	int prepare(std::vector<std::string>& args) override;
 	void init() override;
 	int run() override;
 	int validate() override;

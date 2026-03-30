@@ -1,11 +1,11 @@
 #include "TestCommand.h"
 
-void TestCommand::operator()() {
+int TestCommand::operator()() {
     /**
     * 
     */
     //int res = 
-    
+    return 0;
 }
 
 TestCommand::TestCommand() {
@@ -14,7 +14,7 @@ TestCommand::TestCommand() {
 void TestCommand::init() { //상수 설정 (ex cmd length)
 
 }
-int TestCommand::prepare(std::vector<std::string>& args, Errcodes& handler)
+int TestCommand::prepare(std::vector<std::string>& args)
 {
     cmds = std::move(args);
     return 0;

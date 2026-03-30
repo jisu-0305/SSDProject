@@ -47,5 +47,5 @@ install_manifest.txt
 
 #vcpkg
 vcpkg_installed/
-TestShellProject/x64/
-TestShellProject/TestShellProject/x64/
+.vs/
+x64/

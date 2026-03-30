@@ -2,8 +2,8 @@
 
 
 void TestShell::init() { //open server connection
-    //commands["read"] =
-    //    commands["write"] =
+    commands["read"] = std::make_unique<ReadCommand>();
+    commands["write"] = std::make_unique<WriteCommand>();
     //    commands["help"] =
     //    commands["fullwrite"] =
     //    commands["fullread"] =
@@ -14,11 +14,15 @@ void TestShell::run() {
     std::string in;
     std::string temp;
 
-    Errcodes errhandler;
+    Errcodes& errhandler = Errcodes::get();
     std::vector<std::string> args;
 
+    std::cout << "installed cmds" << std::endl;
+    for (auto& [k, v] : commands) {
+        std::cout << k << std::endl;
+    }
     while (1) {
-        //args.clear();
+        args.clear();
         temp = "";
         std::cout << "shell>";
         std::getline(std::cin, in);
@@ -27,17 +31,24 @@ void TestShell::run() {
         while (std::getline(ss, temp, ' ')) {
             args.push_back(temp);
         }
+
+       
         if (args[0] == "exit") break;
 
         if (!commands.count(args[0])) { //wrong input
+            std::cout << "ERROR" << std::endl;
             continue;
         }
         
         
-        auto& cmd = commands[in];
-        cmd->prepare(args, errhandler);
-        cmd->validate();
-        cmd->run();
+        auto cmd = commands[args[0]].get();
+        cmd->prepare(args);
+        int ret = 0;
+        if ((ret = (*cmd)())) {
+            std::cout << errhandler.getErrorMsg() << std::endl;
+        }
+        //cmd->validate(); //will be called like commands[in]();
+        //cmd->run();
         //int err = commands[in]->;
         //handle errcode? or do it in commands class.
     }

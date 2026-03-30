@@ -3,9 +3,11 @@
 #include <unordered_map>
 #include <functional>
 #include <iostream>
-#include "Errcodes.h"
+//#include "Errcodes.h"
 #include "Command.h"
 #include "TestCommand.h"
+#include "ReadCommand.h"
+#include "WriteCommand.h"
 
 class TestShell
 {
