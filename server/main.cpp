@@ -27,9 +27,8 @@ void init()
 	cout << "nand.txt 생성 완료" << "\n";
 }
 
-string read(int LBA, ifstream& txtFile) 
+string read(const int LBA, ifstream& txtFile) 
 {
-	cout << "index: " << LBA << std::endl;
 	string line;
 	int currentLine = 0;
 
@@ -42,29 +41,57 @@ string read(int LBA, ifstream& txtFile)
 			currentLine++;
 		}
 	} 
+	return "ERROR"; 
 }
 
-void write(const std::vector<std::string>& data) {
+void write(const vector<std::string>& data) {
 	std::ofstream fout(filename);
-
+	
 	for (auto v : data) {
 		fout << v << "\n";
 	}
 }
 
-std::vector<std::string> fullRead() {
-	std::vector<std::string> data(totalLBA, "00000000");
-	std::ifstream fin(filename);
+vector<string> fullRead() {
+	vector<string> data(totalLBA, "00000000");
+	ifstream fin(filename);
 
 	for (int i = 0; i < totalLBA; i++) {
 		getline(fin, data[i]);
 	}
 	return data;
+} 
+
+// LBA변환 (0 -> 3)
+int transformInt(string& s) {
+	int LBAInt = stoi(s); // try~catch 여부 궁금
+
+	if (0 <= LBAInt && LBAInt < 100) { 
+		return LBAInt;
+	}
+	else {
+		return -1;
+	} 
+} 
+
+// 0~F까지 범위 + 4byte 값인지 검증하는 메서드 필요
+bool isValidValue(const string& s) { 
+	if (s.size() != 10) return false; 
+	if (s.substr(0, 2) != "0x") return false; 
+	for (int i = 2; i < 10; i++) { 
+		char c = s[i]; 
+		//0~9와 F까지의 문자만 가능(48~57 또는 65~70만 가능) 
+		if (((48 <= c && c <= 57)) || ((65 <= c)&&(c <= 70))) {  
+			cout << c << "일때 문제 없음" << endl;
+			continue; 
+		}
+		else { 
+			cout << "value값 오류!" << endl; 
+			return false;
+		}
+	} 
+	return true; 
 }
-
-// 숫자 검증 변환 메서드 필요(03 -> 03)
-
-// 0~99 범위 + 4byte 값인지 검증하는 메서드 필요
 
 int main() {
 	//예시 더미 데이터
@@ -72,46 +99,41 @@ int main() {
 	//string exampleInput = "read 03";
 	//string exampleInput = "read 04";
 	string exampleInput = "write 3 0xFFFFFFFF"; 
-
+	
 	// client 입력 받기
 	stringstream ss(exampleInput);
 	string command;
-	string LBA;
-	ss >> command >> LBA;
+	string LBA; 
+	ss >> command >> LBA; 
+
+	//LBA 검증
+	int LBAInt = transformInt(LBA);
+	if (LBAInt == -1) return -1; 
+
 	ifstream readfile("nand.txt");
 	
 	//파일이 존재하는지 아닌지 확인
 	if (readfile.is_open()) {
 		cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
 
-		int LBA_int = stoi(LBA);
-
-		if (0 <= LBA_int && LBA_int < 100) { //LBA 검증
-		}
-		else {
-			cout << "[ERROR]: LBA 범위 오류";
-		}
-
 		if (command == "read") {
-			string line = read(LBA_int, readfile);
+			string line = read(LBAInt, readfile);
 			cout << "read로 찾은 value값: " << line << endl;
 		}
 		else if (command == "write") {
-			string value; //16진수 값는 변수값(취향 따라서 이름 변경) 
+			string value; 
 			ss >> value;
-
-			if ("00000000" <= value && value <= "FFFFFFFF") {//Value 검증
-				//Write 수행
-				std::fstream fs(filename, std::ios::in | std::ios::out | std::ios::binary);
-				if (fs.is_open()) {
-					
-					auto data = fullRead();
-					data[LBA_int] = value;
-					write(data);
-					string line = read(LBA_int, readfile);
-					cout << "read로 찾은 value값: " << line << endl;
-				}
+			if(!isValidValue(value)) return -1;
+			
+			fstream fs(filename, ios::in | ios::out | ios::binary);
+			if (fs.is_open()) {
+				auto data = fullRead();
+				data[LBAInt] = value;
+				write(data);
+				string line = read(LBAInt, readfile);
+				cout << "write로 찾은 value값: " << line << endl;
 			}
+		
 			else {
 				cout << "[ERROR]: Value 값 오류";
 			}
@@ -124,15 +146,15 @@ int main() {
 		//	string LBA = input[1];
 		//	string value = input[2];
 		//	
-		//	int LBA_int = stoi(LBA);
-		//	if (0 <= LBA_int && LBA_int < 100) { //LBA 검증
+		//	int LBAInt = stoi(LBA);
+		//	if (0 <= LBAInt && LBAInt < 100) { //LBA 검증
 
 		//		if ("00000000" <= value && value <= "FFFFFFFF") {//Value 검증
 		//			//Write 수행
-		//			std::fstream fs(filename, std::ios::in | std::ios::out | std::ios::binary);
+		//			fstream fs(filename, ios::in | ios::out | ios::binary);
 		//			if (fs.is_open()) {
 		//			
-		//				fs.seekp(LBA_int, std::ios::beg);
+		//				fs.seekp(LBAInt, ios::beg);
 		//				fs.write(value.c_str(),value.size()); 
 		//				fs.close();
 		//			}
