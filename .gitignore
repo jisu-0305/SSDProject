@@ -21,7 +21,8 @@
 *.vcxproj.user
 *.suo
 *.user
-*vcpkg
+vcpkg*
+**/vcpkg*
 *server/nand.txt 
 cmake-build-*/
 build/
