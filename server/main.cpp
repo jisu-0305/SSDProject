@@ -3,7 +3,9 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <boost/asio.hpp>
 
+using boost::asio::ip::tcp;
 using namespace std;
 
 string filename = "nand.txt";
@@ -94,85 +96,97 @@ bool isValidValue(const string& s) {
 }
 
 int main() {
-	//예시 더미 데이터
-	//string exampleInput = "read 3"; 
-	//string exampleInput = "read 03";
-	//string exampleInput = "read 04";
-	string exampleInput = "write 3 0xFFFFFFFF"; 
-	
-	// client 입력 받기
-	stringstream ss(exampleInput);
-	string command;
-	string LBA; 
-	ss >> command >> LBA; 
+	try {
+		boost::asio::io_context io;
 
-	//LBA 검증
-	int LBAInt = transformInt(LBA);
-	if (LBAInt == -1) return -1; 
+		tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 12345));
 
-	ifstream readfile("nand.txt");
-	
-	//파일이 존재하는지 아닌지 확인
-	if (readfile.is_open()) {
-		cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
+		std::cout << "Server started on port 12345\n";
 
-		if (command == "read") {
-			string line = read(LBAInt, readfile);
-			cout << "read로 찾은 value값: " << line << endl;
-		}
-		else if (command == "write") {
-			string value; 
-			ss >> value;
-			if(!isValidValue(value)) return -1;
+		while (true) {
+			tcp::socket socket(io);
+			acceptor.accept(socket);
+
+			std::cout << "Client connected\n";
+
+			while (true) {
+				char input_data[1024];
+				boost::system::error_code ec;
+
+				size_t length = socket.read_some(boost::asio::buffer(data), ec);
+
+				if (ec == boost::asio::error::eof)
+					break; // 정상 종료
+				else if (ec)
+					throw boost::system::system_error(ec);
+
+				string cmd(buf, length);
+
+				//예시 더미 데이터
+				//string exampleInput = "read 3"; 
+				//string exampleInput = "read 03";
+				//string exampleInput = "read 04";
+				string exampleInput = "write 3 0xFFFFFFFF";
+
+				// client 입력 받기
+				stringstream ss(exampleInput);
+				string command;
+				string LBA;
+				ss >> command >> LBA;
+
+				//LBA 검증
+				int LBAInt = transformInt(LBA);
+				if (LBAInt == -1) boost::asio::write(socket, boost::asio::buffer("ERROR"));//////////WRITE
+
+				ifstream readfile("nand.txt");
+
+				//파일이 존재하는지 아닌지 확인
+				if (readfile.is_open()) {
+					cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
+
+					if (command == "read") {
+						string line = read(LBAInt, readfile);
+						cout << "read로 찾은 value값: " << line << endl;
+						boost::asio::write(socket, boost::asio::buffer("0x" + line + "\n"));///////////////////write
+					}
+					else if (command == "write") {
+						string value;
+						ss >> value;
+						if (!isValidValue(value))boost::asio::write(socket, boost::asio::buffer("ERROR"+"\n"));
+
+						fstream fs(filename, ios::in | ios::out | ios::binary);
+						if (fs.is_open()) {
+							auto data = fullRead();
+							data[LBAInt] = value;
+							write(data);
+							string line = read(LBAInt, readfile);
+							cout << "write로 찾은 value값: " << line << endl;
+
+							boost::asio::write(socket, boost::asio::buffer("SUCCESS" + "\n"));   //////////////WRITE
+						}
+
+						else {
+							cout << "[ERROR]: Value 값 오류";
+							boost::asio::write(socket, boost::asio::buffer("ERROR" + "\n"));
+						}
+					}
+					else {
+						//에러값 반환 필요
+					}
+
+
+				}
+				else {
+					cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
+					init();
+				}
 			
-			fstream fs(filename, ios::in | ios::out | ios::binary);
-			if (fs.is_open()) {
-				auto data = fullRead();
-				data[LBAInt] = value;
-				write(data);
-				string line = read(LBAInt, readfile);
-				cout << "write로 찾은 value값: " << line << endl;
 			}
-		
-			else {
-				cout << "[ERROR]: Value 값 오류";
-			}
+			std::cout << "Client disconnected\n";
 		}
-		else {
-			//에러값 반환 필요
-		}
-
-		//if (input[0] == "write") {
-		//	string LBA = input[1];
-		//	string value = input[2];
-		//	
-		//	int LBAInt = stoi(LBA);
-		//	if (0 <= LBAInt && LBAInt < 100) { //LBA 검증
-
-		//		if ("00000000" <= value && value <= "FFFFFFFF") {//Value 검증
-		//			//Write 수행
-		//			fstream fs(filename, ios::in | ios::out | ios::binary);
-		//			if (fs.is_open()) {
-		//			
-		//				fs.seekp(LBAInt, ios::beg);
-		//				fs.write(value.c_str(),value.size()); 
-		//				fs.close();
-		//			}
-		//			
-		//		}
-		//		else {
-		//			cout << "[ERROR]: Value 값 오류";
-		//		}
-
-		//	}
-		//	else {
-		//		cout << "[ERROR]: LBA 범위 오류";
-		//	}
-		//}
 	}
-	else {
-		cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
-		init();
+	catch (std::exception& e) {
+		std::cerr << e.what() << std::endl;
 	}
 }
 
