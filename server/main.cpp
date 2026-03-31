@@ -14,7 +14,7 @@ const int TOTAL_LBA = 100;
 void init() 
 {
 	ofstream newwrite;
-	newwrite.open("FILE_NAME");
+	newwrite.open(FILE_NAME);
 
 	for (int i = 0; i < 100; i++) {
 		string temp = "00000000"; //이거 수정해야함
@@ -46,13 +46,13 @@ string read(const int LBA, ifstream& txtFile)
 	return "ERROR";
 }
 
-void write(const vector<std::string>& data) {
-	std::ofstream fout(FILE_NAME);
-
-	for (auto v : data) {
-		fout << v << "\n";
-	}
-}
+//void write(const vector<std::string>& data) {
+//	std::ofstream fout(FILE_NAME);
+//
+//	for (auto v : data) {
+//		fout << v << "\n";
+//	}
+//}
 
 vector<string> fullRead() {
 	vector<string> data(TOTAL_LBA, "00000000");
@@ -64,14 +64,32 @@ vector<string> fullRead() {
 	return data;
 }
 
+void write(const string& value, const int LBAInt, fstream& txtFile) {
+	auto data = fullRead();
+	string dataValue = value.substr(2, 8);
+	data[LBAInt] = dataValue;
+	ofstream fout(FILE_NAME);
+
+	for (auto v : data) {
+		fout << v << "\n";
+	}
+	cout << "write 값 변환 완료 ";
+}
+
 // LBA변환 (0 -> 3)
 int transformInt(string& s) {
-	int LBAInt = stoi(s); // try~catch 여부 궁금
-
-	if (0 <= LBAInt && LBAInt < 100) {
-		return LBAInt;
+	if (s.size() > 2) return -1;
+	try {
+		int LBAInt = stoi(s);
+		if (0 <= LBAInt && LBAInt < 100) {
+			return LBAInt;
+		}
+		else {
+			return -1;
+		} 
 	}
-	else {
+	catch (const std::invalid_argument& e) {
+		cout << "정수값이 아닌 값 발견" << endl;
 		return -1;
 	}
 }
@@ -84,8 +102,6 @@ bool isValidValue(const string& s) {
 		char c = s[i];
 		//0~9와 F까지의 문자만 가능(48~57 또는 65~70만 가능) 
 		if (((48 <= c && c <= 57)) || ((65 <= c) && (c <= 70))) {
-			//cout << c << "일때 문제 없음" << endl;
-
 			continue;
 		}
 		else {
@@ -129,7 +145,7 @@ int main() {
 				int LBAInt = transformInt(LBA);
 				if (LBAInt == -1) {
 					boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid LBA\n"));
-					continue;
+					continue; 
 				}
 
 				ifstream findfile(FILE_NAME);
@@ -156,10 +172,9 @@ int main() {
 						continue;
 					}
 
-					auto data = fullRead();
-					data[LBAInt] = value;
-					write(data);
-
+					fstream fs(FILE_NAME, ios::in | ios::out | ios::binary);
+					write(value, LBAInt, fs);
+					
 					boost::asio::write(socket, boost::asio::buffer("SUCCESS\n"));
 				}
 			
