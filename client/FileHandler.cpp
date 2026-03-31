@@ -39,7 +39,7 @@ std::pair<std::string, std::string> FileHandler::getrelevant(std::string shard) 
         handler.makeError(-3);
         std::cerr << e.what() << std::endl;
     }
-    return {};
+    return {"-1", ""};
 }
 std::vector<std::string> FileHandler::get_test_cmds(std::string path)
 {
@@ -56,6 +56,9 @@ std::vector<std::string> FileHandler::get_test_cmds(std::string path)
     return res;
 }
 int FileHandler::writelog(std::string log) {
-    ofs << log;
+    //std::cout << "logging" << std::endl;
+    if (!ofs) std::cout << "got problem" << std::endl;
+    ofs << log << "\n";
+    ofs.flush();
     return 0;
 }

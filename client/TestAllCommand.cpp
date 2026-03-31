@@ -1,6 +1,6 @@
 #include "TestAllCommand.h"
 
-int TestAllCommand::operator()() {
+int TestAllCommand::operator()(bool inner) {
     init();
     int errn = 0;
     Errcodes& handler = Errcodes::get();

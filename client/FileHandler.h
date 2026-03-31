@@ -12,7 +12,7 @@ private:
 	bool debug;
 	std::ofstream ofs;
 public:
-	FileHandler() { debug = true; ofs = std::ofstream("output.txt"); }
+	FileHandler() { debug = true; ofs = std::ofstream("output.txt", std::ofstream::app); }
 	static FileHandler& get();
 	std::vector<std::string> getalltest();
 	std::pair<std::string, std::string> getrelevant(std::string shard);

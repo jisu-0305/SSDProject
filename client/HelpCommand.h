@@ -10,7 +10,7 @@ public:
 	HelpCommand();
 	
 	
-	int operator()() override;
+	int operator()(bool inner) override;
 	int prepare(std::vector<std::string>& args) override;
 	void init() override;
 	int run() override;

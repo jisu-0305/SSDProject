@@ -1,6 +1,6 @@
 #include "TestCommand.h"
 
-int TestCommand::operator()() {
+int TestCommand::operator()(bool inner) {
     init();
     int errn = 0;
     Errcodes& handler = Errcodes::get();
@@ -25,6 +25,10 @@ int TestCommand::run()
     //read file dir, find filename with given str, then do test
     FileHandler &filehandler = FileHandler::get();
     auto target_case = filehandler.getrelevant(cmds[1]);
+    if (target_case.first == "-1") {
+        std::cout << "ERROR" << std::endl;
+        filehandler.writelog("ERROR");
+    }
     std::vector<std::string> orders = filehandler.get_test_cmds(target_case.first);
     std::vector<std::string> shards;
     std::string shard;
@@ -73,9 +77,11 @@ int TestCommand::run()
     if (errcause.first != " ") {
         std::cout << "[FAIL] " << target_case.second << std::endl;
         std::cout << "caused by " << errcause.first << std::endl;
+        filehandler.writelog("[FAIL] " + target_case.second);
     }
     else {
-        std::cout << "[SUCCESS] " << target_case.second << std::endl;
+        std::cout << "[PASS] " << target_case.second << std::endl;
+        filehandler.writelog("[PASS] " + target_case.second);
     }
 
     return 0;

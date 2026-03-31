@@ -18,10 +18,10 @@ void TestShell::run() {
     ResultHandler& reshandler = ResultHandler::get();
     std::vector<std::string> args;
 
-    std::cout << "installed cmds" << std::endl;
-    for (auto& [k, v] : commands) {
-        std::cout << k << " : " << v.get()->get_valid_len() << std::endl;
-    }
+    //std::cout << "installed cmds" << std::endl;
+    //for (auto& [k, v] : commands) {
+    //    std::cout << k << " : " << v.get()->get_valid_len() << std::endl;
+    //}
     while (1) {
         args.clear();
         temp = "";
@@ -45,12 +45,14 @@ void TestShell::run() {
         auto cmd = commands[args[0]].get();
         cmd->prepare(args);
         int ret = 0;
-        if ((ret = (*cmd)())) {
+        if ((ret = (*cmd)(false))) {
             std::cout << errhandler.getErrorMsg() << std::endl;
         }
         else {
             auto res = reshandler.getResult();
-            std::cout << res.second << std::endl;
+            int pos1 = res.first.find("test");
+            int pos2 = res.first.find("testall");
+            if (pos1 == -1 || pos2 == -1) std::cout << res.second << std::endl;
         }
         //cmd->validate(); //will be called like commands[in]();
         //cmd->run();
@@ -70,7 +72,7 @@ std::pair<std::string, std::string> TestShell::runCommand(std::vector<std::strin
     auto cmd = commands[order[0]].get();
     cmd->prepare(order);
     int ret = 0;
-    if ((ret = (*cmd)()) && !inner) {
+    if ((ret = (*cmd)(inner)) && !inner) {
         std::cout << errhandler.getErrorMsg() << std::endl;
     }
     return reshandler.getResult();

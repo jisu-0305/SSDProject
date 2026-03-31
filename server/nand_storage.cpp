@@ -10,7 +10,6 @@ void init() {
         if (i != 99) temp += "\n";
         newwrite.write(temp.c_str(), temp.size());
     }
-    std::cout << "FILE_NAME 생성 완료\n";
 }
 
 std::string read(const int LBA, std::ifstream& txtFile) {

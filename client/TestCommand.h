@@ -9,7 +9,7 @@ private:
 	
 public:
 	TestCommand();
-	int operator() () override;
+	int operator() (bool inner) override;
 	int prepare(std::vector<std::string>& args) override;
 	void init() override;
 	int get_valid_len() override {return 2;}

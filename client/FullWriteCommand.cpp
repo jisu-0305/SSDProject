@@ -1,6 +1,6 @@
 #include "FullWriteCommand.h"
 
-int FullWriteCommand::operator()() {
+int FullWriteCommand::operator()(bool inner) {
 	init();
 	int errn = 0;
 	Errcodes& handler = Errcodes::get();

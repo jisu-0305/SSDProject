@@ -9,7 +9,7 @@ private:
 	int no;
 public:
 	WriteCommand() {};
-	int operator() () override;
+	int operator() (bool) override;
 	int prepare(std::vector<std::string>& args) override;
 	void init() override;
 	int run() override;

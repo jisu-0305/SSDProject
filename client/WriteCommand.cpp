@@ -1,21 +1,25 @@
 #include "WriteCommand.h"
 
-int WriteCommand::operator()() {
+int WriteCommand::operator()(bool inner) {
 	init();
 	int errn = 0;
 	Errcodes& handler = Errcodes::get();
 	ResultHandler& reshandler = ResultHandler::get();
+	FileHandler& f = FileHandler::get();
 	if ((errn = validate())) {
 		handler.makeError(errn);
+		if (!inner) f.writelog("ERROR");
 		reshandler.setResult(cmd_cat, handler.getErrorMsg());
 		return errn;
 	}
 	if ((errn = run())) {
 		handler.makeError(errn);
+		if (!inner) f.writelog("ERROR");
 		reshandler.setResult(cmd_cat, handler.getErrorMsg());
 		return errn;
 	}
 	reshandler.setResult(cmd_cat, "SUCCESS");
+	f.writelog("SUCCESS");
 	return 0;
 }
 int WriteCommand::prepare(std::vector<std::string>& args)

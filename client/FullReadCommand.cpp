@@ -1,6 +1,6 @@
 #include "FullReadCommand.h"
 
-int FullReadCommand::operator()() {
+int FullReadCommand::operator()(bool inner) {
 	init();
 	int errn = 0;
 	Errcodes& handler = Errcodes::get();
@@ -43,6 +43,7 @@ int FullReadCommand::run()
 			break;
 		}
 		std::cout << "LBA " << i << " : " << result.second << std::endl;
+		//f.writelog("LBA " + std::to_string(i) + " : " + result.second);
 		//std::cout << std::endl;
 	}
 	return 0;

@@ -15,7 +15,7 @@
 class Command
 {
 public:
-	virtual int operator()() = 0;
+	virtual int operator()(bool inner) = 0;
 	virtual void init() = 0; //err
 	virtual int prepare(std::vector<std::string> &args) = 0;
 	virtual int validate() = 0;//erro

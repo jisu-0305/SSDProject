@@ -1,6 +1,6 @@
 #include "HelpCommand.h"
 
-int HelpCommand::operator()() {
+int HelpCommand::operator()(bool inner) {
     init();
     int errn = 0;
     Errcodes& handler = Errcodes::get();

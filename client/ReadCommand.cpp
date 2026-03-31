@@ -1,17 +1,23 @@
 #include "ReadCommand.h"
 
-int ReadCommand::operator()() {
+int ReadCommand::operator()(bool inner) {
 	init();
 	int errn = 0;
 	Errcodes& handler = Errcodes::get();
 	ResultHandler& reshandler = ResultHandler::get();
+	FileHandler& f = FileHandler::get();
 	if ((errn = validate())) { 
 		reshandler.setResult(cmd_cat, handler.getErrorMsg());
 		handler.makeError(errn); 
+		if (errn == -1) {
+			if (!inner) f.writelog("ERROR");
+		}
 		return errn;
 	}
 	if ((errn = run())) { 
 		handler.makeError(errn);
+
+		if (!inner) f.writelog("ERROR");
 		reshandler.setResult(cmd_cat, handler.getErrorMsg());
 		return errn; 
 	}
@@ -47,6 +53,8 @@ int ReadCommand::run()
 	ResultHandler& reshandler = ResultHandler::get();
 
 	reshandler.setResult(cmd_cat, "0x" + res[0]);
+	FileHandler& f = FileHandler::get();
+	f.writelog("0x" + res[0]);
 	//std::cout << std::endl;
 	return 0;
 }
