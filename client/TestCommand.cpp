@@ -36,10 +36,17 @@ int TestCommand::run()
         std::stringstream ss(order);
         while (std::getline(ss, shard, ' ')) {
             shards.emplace_back(shard);
-        }
+        }   
         
         std::vector<std::string> cmd = std::vector<std::string>(shards.begin(), shards.end() - 1);
         std::string res = shards.back();
+
+        std::cout << "cmd : ";
+        for (auto& s : cmd) {
+            std::cout << s << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "res : " << res << std::endl;
 
         TestShell &executor = TestShell::get();
         auto resultpair = executor.runCommand(cmd);
@@ -60,7 +67,7 @@ int TestCommand::validate()
     for (auto& s : cmds) {
         std::cout << s << " " << std::endl;
     }
-    if (cmds.size() > len) return -1;
+    if (cmds.size() != 2) return -1;
     std::string& s = cmds[1];
 
     if (!std::isdigit(s[0])) return -1;

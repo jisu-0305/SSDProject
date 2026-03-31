@@ -8,7 +8,7 @@ FileHandler& FileHandler::get()
 }
 std::vector<std::string> FileHandler::getalltest() {
     std::vector<std::string> res;
-    fs::path p = fs::current_path();
+    fs::path p = fs::current_path() / "tests";
 
     std::cout << "path : " << p.root_path().string();
     try {
@@ -25,12 +25,12 @@ std::vector<std::string> FileHandler::getalltest() {
     return res;
 }
 std::string FileHandler::getrelevant(std::string shard) {
-    fs::path p = fs::current_path();
+    fs::path p = fs::current_path() / "tests";
     try {
         for (auto& e : fs::directory_iterator(p)) {
             auto target = e.path().filename().string();
             if (target.find(shard) != std::string::npos) {
-                return target;
+                return e.path().string();
             }
         }
     }

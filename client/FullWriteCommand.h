@@ -1,5 +1,6 @@
 #pragma once
 #include "Command.h"
+#include "TestShell.h"
 class FullWriteCommand : public Command
 {
 private:

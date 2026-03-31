@@ -45,10 +45,9 @@ std::vector<std::string> ClientHandler::receive()
 
     try {
         boost::system::error_code ec;
-        while (length = socket->read_some(boost::asio::buffer(reply), ec)) {
-            res += std::string(reply, length);
-            if (ec) break;
-        }
+        length = socket->read_some(boost::asio::buffer(reply));
+        res += std::string(reply, length);
+    
         std::stringstream ss(res);
         if (debug) std::cout << "getting : ";
         while (std::getline(ss, shard, ' ')) {

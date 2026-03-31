@@ -5,8 +5,11 @@
 #include <sstream>
 #include <string>
 #include <memory>
+#include <tuple>
+#include <initializer_list>
 #include "ClientHandler.h"
 #include "Errcodes.h"
+#include "ResultHandler.h"
 class Command
 {
 public:

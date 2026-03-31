@@ -21,11 +21,15 @@ void FullWriteCommand::init()
 int FullWriteCommand::run()
 {
 	ClientHandler& a = ClientHandler::get();
-
+	
 	for (int i = 0; i < 100; i++) {
-		a.send(cmds);
-		std::vector<std::string> res = std::move(a.receive());
-		
+		TestShell& executor = TestShell::get();
+		executor.runCommand(std::vector<std::string>({ "write", std::to_string(i), cmds[1] }));
+		//std::vector<std::string> res = std::move(a.receive());
+		//for (auto& s : res) {
+		//	std::cout << s << " ";
+		//}
+		//std::cout << std::endl;
 	}
 	return 0;
 }

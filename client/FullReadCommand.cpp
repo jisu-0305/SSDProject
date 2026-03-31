@@ -23,7 +23,8 @@ int FullReadCommand::run()
 {
 	ClientHandler& c = ClientHandler::get();
 	for (int i = 0; i < 100; i++) {
-		c.send(cmds);
+		std::vector<std::string> cmd = {"read", std::to_string(i)};
+		c.send(cmd);
 		std::vector<std::string> res = std::move(c.receive());
 		std::cout << "LBA " << i << " : ";
 		for (auto& s : res) {
@@ -31,6 +32,8 @@ int FullReadCommand::run()
 		}
 		std::cout << std::endl;
 	}
+	ResultHandler& rs = ResultHandler::get();
+	rs.setResult({cmds[0], "1"});
 	return 0;
 }
 

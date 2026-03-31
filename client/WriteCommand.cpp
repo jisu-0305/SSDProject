@@ -6,6 +6,9 @@ int WriteCommand::operator()() {
 	Errcodes& handler = Errcodes::get();
 	if ((errn = validate())) { handler.makeError(errn); return errn; }
 	if ((errn = run())) { handler.makeError(errn); return errn; }
+	ResultHandler& reshandler = ResultHandler::get();
+
+	reshandler.setResult(cmds[0] + " " + cmds[1] + " " + cmds[2], "1");
 	return 0;
 }
 int WriteCommand::prepare(std::vector<std::string>& args)
@@ -24,6 +27,10 @@ int WriteCommand::run()
 	ClientHandler &a = ClientHandler::get();
 
 	a.send(cmds);
+	std::vector<std::string> res = std::move(a.receive());
+	for (auto& s : res) {
+		std::cout << s << " " << std::endl;
+	}
 	return 0;
 }
 

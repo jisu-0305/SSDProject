@@ -48,12 +48,8 @@ int TestAllCommand::validate()
     for (auto& s : cmds) {
         std::cout << s << " " << std::endl;
     }
-    if (cmds.size() > len) return -1;
-    std::string& s = cmds[0];
-
-    if (!std::isdigit(s[0])) return -1;
-    if (s[1] != '_') return -1;
-
+    if (cmds.size() != 1) return -1;
+    
 
     return 0;
 }

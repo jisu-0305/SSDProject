@@ -6,6 +6,10 @@ int ReadCommand::operator()() {
 	Errcodes& handler = Errcodes::get();
 	if ((errn = validate())) { handler.makeError(errn); return errn; }
 	if ((errn = run())) { handler.makeError(errn); return errn; }
+
+	ResultHandler& reshandler = ResultHandler::get();
+
+	reshandler.setResult(cmds[0] + " " + cmds[1], "");
 	return 0;
 }
 int ReadCommand::prepare(std::vector<std::string>& args)
