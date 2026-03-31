@@ -30,7 +30,7 @@ int TestAllCommand::run()
         //std::vector<std::string> cmd = handler.get_test_cmds(s);
         std::vector<std::string> cmd = { "test", s };
         TestShell& executor = TestShell::get();
-        auto resultpair = executor.runCommand(cmd);
+        auto resultpair = executor.runCommand(cmd, true);
         //if (resultpair.second == res) {
         //    std::cout << "succeed" << std::endl;
         //}
@@ -44,11 +44,11 @@ int TestAllCommand::run()
 int TestAllCommand::validate()
 {
     //TestAllCommand
-    std::cout << "INPUT:  ";
-    for (auto& s : cmds) {
-        std::cout << s << " " << std::endl;
-    }
-    if (cmds.size() != 1) return -1;
+    //std::cout << "INPUT:  ";
+    //for (auto& s : cmds) {
+    //    std::cout << s << " " << std::endl;
+    //}
+    if (cmds.size() != 1) return -2;
     
 
     return 0;

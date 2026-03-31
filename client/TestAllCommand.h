@@ -13,5 +13,6 @@ public:
 	void init() override;
 	int run() override;
 	int validate() override;
+	int get_valid_len() override { return 1; }
 };
 

@@ -24,11 +24,11 @@ void HelpCommand::init() { //상수 설정 (ex cmd length)
 int HelpCommand::validate()
 {
     //HelpCommand
-    std::cout << "INPUT:  ";
-    for (auto& s : cmds) {
-        std::cout << s << " " << std::endl;
-    }
-    if (cmds.size() != 1) return -1;
+    //std::cout << "INPUT:  ";
+    //for (auto& s : cmds) {
+    //    std::cout << s << " " << std::endl;
+    //}
+    if (cmds.size() != 1) return -2;
 
     return 0;
 }

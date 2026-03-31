@@ -28,7 +28,9 @@ private:
 public:
 	void init();
 	void run();
-	std::pair<std::string, std::string> runCommand(std::vector<std::string> cmds);
+	std::pair<std::string, std::string> runCommand(std::vector<std::string> cmds, bool inner);
 	static TestShell& get();
+	bool exists_cmd(std::string cmd);
+	int get_valid_cmd_len(std::string cmd);
 };
 

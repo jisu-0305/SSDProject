@@ -10,7 +10,7 @@ std::vector<std::string> FileHandler::getalltest() {
     std::vector<std::string> res;
     fs::path p = fs::current_path() / "tests";
 
-    std::cout << "path : " << p.root_path().string();
+    //std::cout << "path : " << p.root_path().string();
     try {
         for (auto& e : fs::directory_iterator(p)) {
             auto target = e.path().filename().string();
