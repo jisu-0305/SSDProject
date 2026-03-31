@@ -84,11 +84,7 @@ bool isValidValue(const string& s) {
 		char c = s[i];
 		//0~9와 F까지의 문자만 가능(48~57 또는 65~70만 가능) 
 		if (((48 <= c && c <= 57)) || ((65 <= c) && (c <= 70))) {
-<<<<<<< Updated upstream
-			//cout << c << "일때 문제 없음" << endl;
-=======
 			cout << c << "일때 문제 없음" << endl;
->>>>>>> Stashed changes
 			continue;
 		}
 		else {
@@ -98,85 +94,6 @@ bool isValidValue(const string& s) {
 	}
 	return true;
 }
-<<<<<<< Updated upstream
-
-int main() {
-	try {
-		boost::asio::io_context io;
-
-		tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 12345));
-
-		std::cout << "Server started on port 12345\n";
-
-		while (true) {
-			tcp::socket socket(io);
-			acceptor.accept(socket);
-
-			std::cout << "Client connected\n";
-
-			while (true) {
-				char input_data[1024];
-				boost::system::error_code ec;
-
-
-				size_t length = socket.read_some(boost::asio::buffer(input_data), ec);
-
-				if (ec == boost::asio::error::eof) break;
-				else if (ec) throw boost::system::system_error(ec);
-
-
-				string cmd_str(input_data, length);
-				stringstream ss(cmd_str);
-
-				string command, LBA;
-				if (!(ss >> command >> LBA)) continue;
-
-				int LBAInt = transformInt(LBA);
-				if (LBAInt == -1) {
-					boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid LBA\n"));
-					continue;
-				}
-
-				ifstream readfile("nand.txt");
-				if (readfile.is_open()) {
-
-					cout << "Executing command: " << command << " for LBA " << LBAInt << endl;
-
-					if (command == "read") {
-						string line = read(LBAInt, readfile);
-						boost::asio::write(socket, boost::asio::buffer(line + "\n"));
-					}
-					else if (command == "write") {
-						string value;
-						ss >> value;
-						if (!isValidValue(value)) {
-							cout << "Invalid Value\n";
-							boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid Value\n"));
-							continue;
-						}
-
-						auto data = fullRead();
-						data[LBAInt] = value;
-						write(data);
-
-						boost::asio::write(socket, boost::asio::buffer("SUCCESS\n"));
-					}
-				}
-				else {
-					init();
-				}
-			}
-
-
-			std::cout << "Client disconnected\n";
-		}
-	}
-	catch (std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
-}
-=======
->>>>>>> Stashed changes
 
 int main() {
 	try {
