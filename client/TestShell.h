@@ -7,11 +7,19 @@
 #include <initializer_list>
 
 #include "Errcodes.h"
+#include "ResultHandler.h"
+
+
 #include "Command.h"
 #include "TestCommand.h"
+#include "TestAllCommand.h"
+#include "HelpCommand.h"
 #include "ReadCommand.h"
 #include "WriteCommand.h"
-#include "ResultHandler.h"
+#include "FullReadCommand.h"
+#include "FullWriteCommand.h"
+
+
 
 class TestShell
 {

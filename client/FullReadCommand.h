@@ -7,7 +7,7 @@ private:
 	std::vector<std::string> cmds;
 
 public:
-	FullReadCommand();
+	FullReadCommand() {};
 	int operator()() override;
 	int prepare(std::vector<std::string>& args) override;
 	void init() override;

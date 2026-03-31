@@ -25,8 +25,8 @@ int ClientHandler::send(std::vector<std::string>& target)
     }
     try {
 
-        if (!debug) boost::asio::write(*socket, boost::asio::buffer(line));
-        else std::cout << "sending : " << line << " " << std::endl;
+        boost::asio::write(*socket, boost::asio::buffer(line));
+        if (debug) std::cout << "sending : " << line << " " << std::endl;
     }
     catch (std::exception& e) {
         std::cerr << e.what() << std::endl;
@@ -44,11 +44,11 @@ std::vector<std::string> ClientHandler::receive()
     std::vector<std::string> split;
 
     try {
-
-        while ((length = socket->read_some(boost::asio::buffer(reply))) > 0) {
+        boost::system::error_code ec;
+        while (length = socket->read_some(boost::asio::buffer(reply), ec)) {
             res += std::string(reply, length);
+            if (ec) break;
         }
-    
         std::stringstream ss(res);
         if (debug) std::cout << "getting : ";
         while (std::getline(ss, shard, ' ')) {

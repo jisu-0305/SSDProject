@@ -6,6 +6,24 @@ FileHandler& FileHandler::get()
     static FileHandler handler;
     return handler;
 }
+std::vector<std::string> FileHandler::getalltest() {
+    std::vector<std::string> res;
+    fs::path p = fs::current_path();
+
+    std::cout << "path : " << p.root_path().string();
+    try {
+        for (auto& e : fs::directory_iterator(p)) {
+            auto target = e.path().filename().string();
+            res.emplace_back(target);
+        }
+    }
+    catch (std::exception& e) {
+        Errcodes handler = Errcodes::get();
+        handler.makeError(-3);
+        std::cerr << e.what() << std::endl;
+    }
+    return res;
+}
 std::string FileHandler::getrelevant(std::string shard) {
     fs::path p = fs::current_path();
     try {
@@ -38,4 +56,5 @@ std::vector<std::string> FileHandler::get_test_cmds(std::string path)
 }
 int FileHandler::writelog(std::string log) {
     ofs << log;
+    return 0;
 }

@@ -9,9 +9,7 @@ int TestAllCommand::operator()() {
     return 0;
 }
 
-TestAllCommand::TestAllCommand() {
-    init();
-}
+TestAllCommand::TestAllCommand() {}
 void TestAllCommand::init() { //상수 설정 (ex cmd length)
 
 }
@@ -25,6 +23,21 @@ int TestAllCommand::prepare(std::vector<std::string>& args)
 int TestAllCommand::run()
 {
     //read file dir, find filename with given str, then do test
+    FileHandler& handler = FileHandler::get();
+    std::vector < std::string> targets = handler.getalltest();
+
+    for (auto& s : targets) {
+        //std::vector<std::string> cmd = handler.get_test_cmds(s);
+        std::vector<std::string> cmd = { "test", s };
+        TestShell& executor = TestShell::get();
+        auto resultpair = executor.runCommand(cmd);
+        //if (resultpair.second == res) {
+        //    std::cout << "succeed" << std::endl;
+        //}
+        //else {
+        //    std::cout << "error on > " << order << std::endl;
+        //}
+    }
     return 0;
 }
 

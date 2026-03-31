@@ -38,10 +38,17 @@ int TestCommand::run()
             shards.emplace_back(shard);
         }
         
-        std::string cmd = 
+        std::vector<std::string> cmd = std::vector<std::string>(shards.begin(), shards.end() - 1);
         std::string res = shards.back();
 
-        TestShell::get();
+        TestShell &executor = TestShell::get();
+        auto resultpair = executor.runCommand(cmd);
+        if (resultpair.second == res) {
+            std::cout << "succeed" << std::endl;
+        }
+        else {
+            std::cout << "error on > " << order << std::endl;
+        }
     }
     return 0;
 }

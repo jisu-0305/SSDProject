@@ -49,3 +49,5 @@ install_manifest.txt
 vcpkg_installed/
 .vs/
 x64/
+tests/
+output.txt

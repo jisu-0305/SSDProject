@@ -4,11 +4,11 @@
 void TestShell::init() { //open server connection
     commands["read"] = std::make_unique<ReadCommand>();
     commands["write"] = std::make_unique<WriteCommand>();
-    //    commands["help"] =
-    //    commands["fullwrite"] =
-    //    commands["fullread"] =
+    commands["help"] = std::make_unique<HelpCommand>();
+    commands["fullwrite"] = std::make_unique<FullWriteCommand>();
+    commands["fullread"] = std::make_unique<FullReadCommand>();
     commands["test"] = std::make_unique<TestCommand>();
-    //commands["TestCommandall"] =
+    commands["testall"] = std::make_unique<TestAllCommand>();
 }
 void TestShell::run() {
     std::string in;
@@ -32,7 +32,7 @@ void TestShell::run() {
             args.push_back(temp);
         }
 
-       
+        if (args.empty()) continue;
         if (args[0] == "exit") break;
 
         if (!commands.count(args[0])) { //wrong input
