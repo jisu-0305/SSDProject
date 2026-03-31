@@ -43,6 +43,7 @@ void TestShell::run() {
         
         
         auto cmd = commands[args[0]].get();
+        temp = args[0];
         cmd->prepare(args);
         int ret = 0;
         if ((ret = (*cmd)(false))) {
@@ -50,9 +51,14 @@ void TestShell::run() {
         }
         else {
             auto res = reshandler.getResult();
-            int pos1 = res.first.find("test");
-            int pos2 = res.first.find("testall");
-            if (pos1 == -1 || pos2 == -1) std::cout << res.second << std::endl;
+            size_t pos1 = temp.find("test");
+            if (pos1 == std::string::npos) {
+                std::cout << "helre";
+                std::cout << res.second << std::endl;
+            }
+            else {
+                
+            }
         }
         //cmd->validate(); //will be called like commands[in]();
         //cmd->run();
