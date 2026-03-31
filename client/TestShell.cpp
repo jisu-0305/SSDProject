@@ -58,9 +58,12 @@ std::pair<std::string, std::string> TestShell::runCommand(std::vector<std::strin
     auto cmd = commands[order[0]].get();
     cmd->prepare(order);
     int ret = 0;
+    Errcodes& errhandler = Errcodes::get();
     if ((ret = (*cmd)())) {
         std::cout << errhandler.getErrorMsg() << std::endl;
     }
+    ResultHandler& reshandler = ResultHandler::get();
+    return reshandler.getResult();
 }
 TestShell& TestShell::get() {
     static TestShell ts;

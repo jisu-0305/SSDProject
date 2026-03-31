@@ -3,11 +3,15 @@
 #include <unordered_map>
 #include <functional>
 #include <iostream>
-//#include "Errcodes.h"
+#include <tuple>
+#include <initializer_list>
+
+#include "Errcodes.h"
 #include "Command.h"
 #include "TestCommand.h"
 #include "ReadCommand.h"
 #include "WriteCommand.h"
+#include "ResultHandler.h"
 
 class TestShell
 {
