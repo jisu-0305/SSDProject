@@ -24,6 +24,10 @@ int ReadCommand::run()
 	ClientHandler& c = ClientHandler::get();
 	c.send(cmds);
 	std::vector<std::string> res = std::move(c.receive());
+	for (auto& s : res) {
+		std::cout << s << " ";
+	}
+	std::cout << std::endl;
 	return 0;
 }
 

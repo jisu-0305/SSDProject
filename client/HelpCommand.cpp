@@ -1,9 +1,41 @@
 #include "HelpCommand.h"
 
+int HelpCommand::operator()() {
+    init();
+    int errn = 0;
+    Errcodes& handler = Errcodes::get();
+    if ((errn = validate())) { handler.makeError(errn); return errn; }
+    if ((errn = run())) { handler.makeError(errn); return errn; }
+    return 0;
+}
 
+HelpCommand::HelpCommand() {
+    init();
+}
+int HelpCommand::prepare(std::vector<std::string>& args)
+{
+    cmds = std::move(args);
+    return 0;
+}
+void HelpCommand::init() { //상수 설정 (ex cmd length)
 
-void HelpCommand::HelpCommand() {
-	std::cout << "팀 이름: 쌀먹 삼대장";
+}
+
+int HelpCommand::validate()
+{
+    //HelpCommand
+    std::cout << "INPUT:  ";
+    for (auto& s : cmds) {
+        std::cout << s << " " << std::endl;
+    }
+    if (cmds.size() != 1) return -1;
+
+    return 0;
+}
+
+int HelpCommand::run()
+{
+    std::cout << "팀 이름: 쌀먹 삼대장";
 	std::cout << "팀  원: 이민한, 김지수, 오승훈 ";
 	std::cout << "각 명령어 사용 법";
 
@@ -23,4 +55,6 @@ void HelpCommand::HelpCommand() {
 	std::cout << "\n";
 	std::cout<<"[testall]: testall을 넣으세요 ex): testall" << std::endl;
 
+    //read file dir, find filename with given str, then do test
+    return 0;
 }
