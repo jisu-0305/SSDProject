@@ -6,13 +6,13 @@ int WriteCommand::operator()() {
 	Errcodes& handler = Errcodes::get();
 	ResultHandler& reshandler = ResultHandler::get();
 	if ((errn = validate())) {
-		reshandler.setResult(cmd_cat, "ERROR");
 		handler.makeError(errn);
+		reshandler.setResult(cmd_cat, handler.getErrorMsg());
 		return errn;
 	}
 	if ((errn = run())) {
 		handler.makeError(errn);
-		reshandler.setResult(cmd_cat, "ERROR");
+		reshandler.setResult(cmd_cat, handler.getErrorMsg());
 		return errn;
 	}
 	reshandler.setResult(cmd_cat, "SUCCESS");
@@ -50,12 +50,12 @@ int WriteCommand::run()
 
 int WriteCommand::validate()
 {
-	if (cmds.size() != 3) return -1;
+	if (cmds.size() != 3) return -2;
 	std::string& target = cmds[1];
 	std::stringstream ss(target);
 	int num = 0;
 	if (ss >> num) {
-		if (num < 0 || num >= 100) return -2; // outof rang
+		if (num < 0 || num >= 100) return -1; // outof rang
 	}
 	else {
 		return -1;

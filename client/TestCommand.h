@@ -12,6 +12,7 @@ public:
 	int operator() () override;
 	int prepare(std::vector<std::string>& args) override;
 	void init() override;
+	int get_valid_len() override {return 2;}
 	int run() override;
 	int validate() override;
 };
