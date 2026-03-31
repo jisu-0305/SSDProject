@@ -46,14 +46,6 @@ string read(const int LBA, ifstream& txtFile)
 	return "ERROR";
 }
 
-//void write(const vector<std::string>& data) {
-//	std::ofstream fout(FILE_NAME);
-//
-//	for (auto v : data) {
-//		fout << v << "\n";
-//	}
-//}
-
 vector<string> fullRead() {
 	vector<string> data(TOTAL_LBA, "00000000");
 	ifstream fin(FILE_NAME);
@@ -62,7 +54,7 @@ vector<string> fullRead() {
 		getline(fin, data[i]);
 	}
 	return data;
-}
+} 
 
 void write(const string& value, const int LBAInt, fstream& txtFile) {
 	auto data = fullRead();
@@ -73,7 +65,6 @@ void write(const string& value, const int LBAInt, fstream& txtFile) {
 	for (auto v : data) {
 		fout << v << "\n";
 	}
-	cout << "write 값 변환 완료 ";
 }
 
 // LBA변환 (0 -> 3)
@@ -89,7 +80,6 @@ int transformInt(string& s) {
 		} 
 	}
 	catch (const std::invalid_argument& e) {
-		cout << "정수값이 아닌 값 발견" << endl;
 		return -1;
 	}
 }
@@ -105,7 +95,6 @@ bool isValidValue(const string& s) {
 			continue;
 		}
 		else {
-			cout << "value값 오류!" << endl;
 			return false;
 		}
 	}
@@ -152,7 +141,6 @@ int main() {
 
 				if (findfile.is_open()) cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
 				else {
-					cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
 					init();
 				}
 

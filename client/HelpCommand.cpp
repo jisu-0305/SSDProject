@@ -35,9 +35,9 @@ int HelpCommand::validate()
 
 int HelpCommand::run()
 {
-    std::cout << "팀 이름: 쌀먹 삼대장";
+    std::cout << "팀 이름: 쌀먹 삼대장 ";
 	std::cout << "팀  원: 이민한, 김지수, 오승훈 ";
-	std::cout << "각 명령어 사용 법";
+	std::cout << "각 명령어 사용 법 "; 
 
 	std::cout << "[Write]: write 숫자 value를 넣으세요 ex): write 3 0x11223344" << std::endl;
 	std::cout << "\n";
