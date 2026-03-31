@@ -20,7 +20,7 @@ void TestShell::run() {
 
     std::cout << "installed cmds" << std::endl;
     for (auto& [k, v] : commands) {
-        std::cout << k << std::endl;
+        std::cout << k << " : " << v.get()->get_valid_len() << std::endl;
     }
     while (1) {
         args.clear();
@@ -37,7 +37,7 @@ void TestShell::run() {
         if (args[0] == "exit") break;
 
         if (!commands.count(args[0])) { //wrong input
-            std::cout << "ERROR" << std::endl;
+            std::cout << "INVALID COMMAND" << std::endl;
             continue;
         }
         
@@ -58,21 +58,34 @@ void TestShell::run() {
         //handle errcode? or do it in commands class.
     }
 }
-std::pair<std::string, std::string> TestShell::runCommand(std::vector<std::string> order)
+std::pair<std::string, std::string> TestShell::runCommand(std::vector<std::string> order, bool inner)
 {
+    ResultHandler& reshandler = ResultHandler::get();
+    Errcodes& errhandler = Errcodes::get();
+    if (!commands.count(order[0])) {
+        errhandler.makeError(-2);
+        reshandler.setResult("", errhandler.getErrorMsg());
+        return reshandler.getResult();
+    }
     auto cmd = commands[order[0]].get();
     cmd->prepare(order);
     int ret = 0;
-    Errcodes& errhandler = Errcodes::get();
-    if ((ret = (*cmd)())) {
+    if ((ret = (*cmd)()) && !inner) {
         std::cout << errhandler.getErrorMsg() << std::endl;
     }
-    ResultHandler& reshandler = ResultHandler::get();
     return reshandler.getResult();
 }
 TestShell& TestShell::get() {
     static TestShell ts;
     return ts;
+}
+bool TestShell::exists_cmd(std::string cmd)
+{
+    return (!commands.count(cmd)) ? false : true;
+}
+int TestShell::get_valid_cmd_len(std::string cmd) {
+    if (!exists_cmd(cmd)) return -1;
+    return commands[cmd].get()->get_valid_len();
 }
 int main() {
     TestShell& ts = TestShell::get();

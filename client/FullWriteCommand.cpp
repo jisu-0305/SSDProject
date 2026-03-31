@@ -35,7 +35,7 @@ int FullWriteCommand::run()
 	FileHandler& f = FileHandler::get();
 	TestShell& executor = TestShell::get();
 	for (int i = 0; i < 100; i++) {
-		auto result = executor.runCommand(std::vector<std::string>({ "write", std::to_string(i), cmds[1] }));
+		auto result = executor.runCommand(std::vector<std::string>({ "write", std::to_string(i), cmds[1] }), true);
 		if (result.second == "ERROR") {
 			reshandler.setResult(cmd_cat, "ERROR");
 			break;
@@ -51,7 +51,7 @@ int FullWriteCommand::run()
 
 int FullWriteCommand::validate()
 {
-	if (cmds.size() != 2) return -1;
+	if (cmds.size() != 2) return -2;
 	
 
 	std::string& hex = cmds[1];

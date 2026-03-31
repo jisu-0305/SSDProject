@@ -20,5 +20,6 @@ public:
 	virtual int prepare(std::vector<std::string> &args) = 0;
 	virtual int validate() = 0;//erro
 	virtual int run() = 0; //erro
+	virtual int get_valid_len() = 0;
 };
 

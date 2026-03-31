@@ -15,11 +15,13 @@ void Errcodes::makeError(int errn)
     switch (errn) {
     case -1:
     {
-        lore = "Invalid command";
+        lore = "ERROR";
+        break;
     }
     case -2:
     {
-        lore = "invalid input2";
+        lore = "INVALID COMMAND";
+        break;
     }
     }
 }

@@ -37,12 +37,12 @@ int FullReadCommand::run()
 	TestShell& executor = TestShell::get();
 	for (int i = 0; i < 100; i++) {
 		std::vector<std::string> cmd = {"read", std::to_string(i)};
-		auto result = executor.runCommand(std::vector<std::string>({ "read", std::to_string(i)}));
-		//std::cout << "LBA " << i << " : ";
+		auto result = executor.runCommand(std::vector<std::string>({ "read", std::to_string(i)}), true);
 		if (result.second == "ERROR") {
 			reshandler.setResult(cmd_cat, "ERROR");
 			break;
 		}
+		std::cout << "LBA " << i << " : " << result.second << std::endl;
 		//std::cout << std::endl;
 	}
 	return 0;
@@ -50,7 +50,7 @@ int FullReadCommand::run()
 
 int FullReadCommand::validate()
 {
-	if (cmds.size() != 1) return -1;
+	if (cmds.size() != 1) return -2;
 	
 	return 0;
 }
