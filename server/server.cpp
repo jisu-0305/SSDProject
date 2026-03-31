@@ -14,12 +14,10 @@ using boost::asio::ip::tcp;
 void runServer(int port) {
     boost::asio::io_context io;
     tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), port));
-    std::cout << "Server started on port " << port << "\n";
 
     while (true) {
         tcp::socket socket(io);
         acceptor.accept(socket);
-        std::cout << "Client connected\n";
 
         while (true) {
             char input_data[1024];
@@ -42,8 +40,6 @@ void runServer(int port) {
             std::ifstream findfile(FILE_NAME);
             if (!findfile.is_open()) init();
 
-            std::cout << "Executing command: " << command << " for LBA " << LBAInt << "\n";
-
             if (command == "read") {
                 std::ifstream readfile(FILE_NAME);
                 std::string line = read(LBAInt, readfile);
@@ -53,7 +49,6 @@ void runServer(int port) {
                 std::string value;
                 ss >> value;
                 if (!isValidValue(value)) {
-                    std::cout << "Invalid Value\n";
                     boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid Value\n"));
                     continue;
                 }
@@ -62,6 +57,5 @@ void runServer(int port) {
                 boost::asio::write(socket, boost::asio::buffer("SUCCESS\n"));
             }
         }
-        std::cout << "Client disconnected\n";
     }
 }
