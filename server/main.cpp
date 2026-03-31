@@ -11,7 +11,7 @@ using namespace std;
 const string FILE_NAME = "nand.txt";
 const int TOTAL_LBA = 100;
 
-void init()
+void init() 
 {
 	ofstream newwrite;
 	newwrite.open("FILE_NAME");
@@ -47,7 +47,7 @@ string read(const int LBA, ifstream& txtFile)
 }
 
 void write(const vector<std::string>& data) {
-	std::ofstream fout(filename);
+	std::ofstream fout(FILE_NAME);
 
 	for (auto v : data) {
 		fout << v << "\n";
@@ -56,7 +56,7 @@ void write(const vector<std::string>& data) {
 
 vector<string> fullRead() {
 	vector<string> data(TOTAL_LBA, "00000000");
-	ifstream fin(filename);
+	ifstream fin(FILE_NAME);
 
 	for (int i = 0; i < TOTAL_LBA; i++) {
 		getline(fin, data[i]);
@@ -132,36 +132,38 @@ int main() {
 					continue;
 				}
 
-				ifstream readfile(filename);
-				if (readfile.is_open()) {
+				ifstream findfile(FILE_NAME);
 
-					cout << "Executing command: " << command << " for LBA " << LBAInt << endl;
-
-					if (command == "read") {
-						string line = read(LBAInt, readfile);
-						boost::asio::write(socket, boost::asio::buffer(line + "\n"));
-					}
-					else if (command == "write") {
-						string value;
-						ss >> value;
-						if (!isValidValue(value)) {
-							cout << "Invalid Value\n";
-							boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid Value\n"));
-							continue;
-						}
-
-						auto data = fullRead();
-						data[LBAInt] = value;
-						write(data);
-
-						boost::asio::write(socket, boost::asio::buffer("SUCCESS\n"));
-					}
-				}
+				if (findfile.is_open()) cout << "nand.txt 파일이 존재하는 상태입니다. 이제 명령을 수행합니다." << endl;
 				else {
+					cout << "nand.txt가 존재하지 않음 생성시작 " << endl;
 					init();
 				}
-			}
 
+				cout << "Executing command: " << command << " for LBA " << LBAInt << endl;
+
+				if (command == "read") {
+					ifstream readfile(FILE_NAME);
+					string line = read(LBAInt, readfile);
+					boost::asio::write(socket, boost::asio::buffer(line + "\n"));
+				}
+				else if (command == "write") {
+					string value;
+					ss >> value;
+					if (!isValidValue(value)) {
+						cout << "Invalid Value\n";
+						boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid Value\n"));
+						continue;
+					}
+
+					auto data = fullRead();
+					data[LBAInt] = value;
+					write(data);
+
+					boost::asio::write(socket, boost::asio::buffer("SUCCESS\n"));
+				}
+			
+			}
 
 			std::cout << "Client disconnected\n";
 		}
