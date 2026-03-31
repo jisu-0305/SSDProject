@@ -15,7 +15,7 @@ public:
 	FileHandler() { debug = true; ofs = std::ofstream("output.txt"); }
 	static FileHandler& get();
 	std::vector<std::string> getalltest();
-	std::string getrelevant(std::string shard);
+	std::pair<std::string, std::string> getrelevant(std::string shard);
 	std::vector<std::string> get_test_cmds(std::string path);
 	int writelog(std::string);
 };

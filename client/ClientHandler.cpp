@@ -5,7 +5,7 @@ ClientHandler& ClientHandler::get() {
     return handler;
 }
 ClientHandler::ClientHandler() {
-    debug = true;
+    debug = false;
     try {
         io = std::make_unique<boost::asio::io_context>();
         socket = std::make_unique<tcp::socket>(*io);
@@ -54,7 +54,7 @@ std::vector<std::string> ClientHandler::receive()
             if (debug) std::cout << shard << " ";
             split.push_back(shard);
         }
-        std::cout << std::endl;
+        if (debug) std::cout << std::endl;
     }
     catch (std::exception& e) {
         std::cerr << e.what() << std::endl;

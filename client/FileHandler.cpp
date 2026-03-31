@@ -24,13 +24,13 @@ std::vector<std::string> FileHandler::getalltest() {
     }
     return res;
 }
-std::string FileHandler::getrelevant(std::string shard) {
+std::pair<std::string, std::string> FileHandler::getrelevant(std::string shard) {
     fs::path p = fs::current_path() / "tests";
     try {
         for (auto& e : fs::directory_iterator(p)) {
             auto target = e.path().filename().string();
             if (target.find(shard) != std::string::npos) {
-                return e.path().string();
+                return { e.path().string(), e.path().filename().string() };
             }
         }
     }
@@ -39,6 +39,7 @@ std::string FileHandler::getrelevant(std::string shard) {
         handler.makeError(-3);
         std::cerr << e.what() << std::endl;
     }
+    return {};
 }
 std::vector<std::string> FileHandler::get_test_cmds(std::string path)
 {

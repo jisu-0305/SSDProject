@@ -6,7 +6,7 @@ class FullWriteCommand : public Command
 private:
 	const int len = 2;
 	std::vector<std::string> cmds;
-
+	std::string cmd_cat;
 public:
 	FullWriteCommand() {};
 	int operator() () override;

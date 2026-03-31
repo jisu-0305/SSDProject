@@ -5,6 +5,7 @@ class WriteCommand : public Command
 {
 private:
 	std::vector<std::string> cmds;
+	std::string cmd_cat;
 	int no;
 public:
 	WriteCommand() {};

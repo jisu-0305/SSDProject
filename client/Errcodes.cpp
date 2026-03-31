@@ -15,7 +15,7 @@ void Errcodes::makeError(int errn)
     switch (errn) {
     case -1:
     {
-        lore = "invalid input";
+        lore = "Invalid command";
     }
     case -2:
     {

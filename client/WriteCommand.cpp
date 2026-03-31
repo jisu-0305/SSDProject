@@ -4,22 +4,36 @@ int WriteCommand::operator()() {
 	init();
 	int errn = 0;
 	Errcodes& handler = Errcodes::get();
-	if ((errn = validate())) { handler.makeError(errn); return errn; }
-	if ((errn = run())) { handler.makeError(errn); return errn; }
 	ResultHandler& reshandler = ResultHandler::get();
-
-	reshandler.setResult(cmds[0] + " " + cmds[1] + " " + cmds[2], "1");
+	if ((errn = validate())) {
+		reshandler.setResult(cmd_cat, "ERROR");
+		handler.makeError(errn);
+		return errn;
+	}
+	if ((errn = run())) {
+		handler.makeError(errn);
+		reshandler.setResult(cmd_cat, "ERROR");
+		return errn;
+	}
+	reshandler.setResult(cmd_cat, "SUCCESS");
 	return 0;
 }
 int WriteCommand::prepare(std::vector<std::string>& args)
 {
-	cmds = std:: move(args);
+	cmds = std::move(args);
+	no = -1;
+	cmd_cat = "";
+	
 	return 0;
 }
 
 void WriteCommand::init()
 {
-	no = -1;
+	for (auto& s : cmds) {
+		cmd_cat += s;
+		cmd_cat += " ";
+	}
+	cmd_cat.pop_back();
 }
 
 int WriteCommand::run()
@@ -28,9 +42,9 @@ int WriteCommand::run()
 
 	a.send(cmds);
 	std::vector<std::string> res = std::move(a.receive());
-	for (auto& s : res) {
-		std::cout << s << " " << std::endl;
-	}
+	//for (auto& s : res) {
+	//	std::cout << s << " " << std::endl;
+	//}
 	return 0;
 }
 

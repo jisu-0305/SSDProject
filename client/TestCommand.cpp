@@ -26,37 +26,51 @@ int TestCommand::run()
 {
     //read file dir, find filename with given str, then do test
     FileHandler &filehandler = FileHandler::get();
-    std::string target_case = filehandler.getrelevant(cmds[1]);
-    std::vector<std::string> orders = filehandler.get_test_cmds(target_case);
+    auto target_case = filehandler.getrelevant(cmds[1]);
+    std::vector<std::string> orders = filehandler.get_test_cmds(target_case.first);
     std::vector<std::string> shards;
     std::string shard;
+     
+    std::pair<std::string, std::string> errcause = {" ", ""};
     for (auto& order: orders) {
         
-        std::cout << "taking " << order << std::endl;
+        //std::cout << "taking " << order << std::endl;
         std::stringstream ss(order);
+        shards.clear();
         while (std::getline(ss, shard, ' ')) {
             shards.emplace_back(shard);
-        }   
+        }
         
         std::vector<std::string> cmd = std::vector<std::string>(shards.begin(), shards.end() - 1);
         std::string res = shards.back();
 
-        std::cout << "cmd : ";
-        for (auto& s : cmd) {
-            std::cout << s << " ";
-        }
-        std::cout << std::endl;
-        std::cout << "res : " << res << std::endl;
+        //std::cout << "cmd : ";
+        //for (auto& s : cmd) {
+        //    std::cout << s << " ";
+        //}
+        //std::cout << std::endl;
+        //std::cout << "res : " << res << std::endl;
 
         TestShell &executor = TestShell::get();
         auto resultpair = executor.runCommand(cmd);
+        //std::cout << "got > " << resultpair.first << " " << resultpair.second << std::endl;
         if (resultpair.second == res) {
-            std::cout << "succeed" << std::endl;
+            //std::cout << "succeed" << std::endl;
         }
         else {
-            std::cout << "error on > " << order << std::endl;
+            errcause = resultpair;
+            //std::cout << "error on > " << order << std::endl;
+            break;
         }
     }
+    if (errcause.first != " ") {
+        std::cout << "[FAIL] " << target_case.second << std::endl;
+        std::cout << "caused by " << errcause.first << std::endl;
+    }
+    else {
+        std::cout << "[SUCCESS] " << target_case.second << std::endl;
+    }
+
     return 0;
 }
 

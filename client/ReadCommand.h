@@ -5,6 +5,7 @@ class ReadCommand : public Command
 private:
 	int no;
 	std::vector<std::string> cmds;
+	std::string cmd_cat;
 public:
 	ReadCommand() {};
 	int operator() () override;

@@ -1,11 +1,12 @@
 #pragma once
 #include "Command.h"
+#include "TestShell.h"
 class FullReadCommand : public Command
 {
 private:
 	const int len = 2;
 	std::vector<std::string> cmds;
-
+	std::string cmd_cat;
 public:
 	FullReadCommand() {};
 	int operator()() override;

@@ -161,13 +161,13 @@ int main() {
 				if (command == "read") {
 					ifstream readfile(FILE_NAME);
 					string line = read(LBAInt, readfile);
-					boost::asio::write(socket, boost::asio::buffer(line + "\n"));
+					boost::asio::write(socket, boost::asio::buffer(line));
 				}
 				else if (command == "write") {
 					string value;
 					ss >> value;
 					if (!isValidValue(value)) {
-						cout << "Invalid Value\n";
+						cout << "Invalid Value";
 						boost::asio::write(socket, boost::asio::buffer("ERROR: Invalid Value\n"));
 						continue;
 					}

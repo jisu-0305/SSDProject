@@ -15,6 +15,7 @@ void TestShell::run() {
     std::string temp;
 
     Errcodes& errhandler = Errcodes::get();
+    ResultHandler& reshandler = ResultHandler::get();
     std::vector<std::string> args;
 
     std::cout << "installed cmds" << std::endl;
@@ -46,6 +47,10 @@ void TestShell::run() {
         int ret = 0;
         if ((ret = (*cmd)())) {
             std::cout << errhandler.getErrorMsg() << std::endl;
+        }
+        else {
+            auto res = reshandler.getResult();
+            std::cout << res.second << std::endl;
         }
         //cmd->validate(); //will be called like commands[in]();
         //cmd->run();
