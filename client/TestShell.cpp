@@ -53,8 +53,21 @@ void TestShell::run() {
         //handle errcode? or do it in commands class.
     }
 }
+std::pair<std::string, std::string> TestShell::runCommand(std::vector<std::string> order)
+{
+    auto cmd = commands[order[0]].get();
+    cmd->prepare(order);
+    int ret = 0;
+    if ((ret = (*cmd)())) {
+        std::cout << errhandler.getErrorMsg() << std::endl;
+    }
+}
+TestShell& TestShell::get() {
+    static TestShell ts;
+    return ts;
+}
 int main() {
-    TestShell ts;
+    TestShell& ts = TestShell::get();
     ts.init();
     ts.run();
 }

@@ -16,5 +16,7 @@ private:
 public:
 	void init();
 	void run();
+	std::pair<std::string, std::string> runCommand(std::vector<std::string> cmds);
+	static TestShell& get();
 };
 

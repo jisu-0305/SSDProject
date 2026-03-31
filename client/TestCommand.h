@@ -1,5 +1,6 @@
 #pragma once
 #include "Command.h"
+#include "FileHandler.h"
 class TestCommand : public Command
 {
 private:
